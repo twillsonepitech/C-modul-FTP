@@ -12,5 +12,10 @@
 
 #include "object.h"
 
-void ctor(Ftp *this, va_list va_arg);
-void dtor(Ftp *this);
+void Ctor(Ftp *this, va_list va_arg);
+void Dtor(Ftp *this);
+
+uint32_t Get_port(Ftp *this);
+const uint8_t *Get_path(Ftp *this);
+Ftp *Set_port(Ftp *this, const uint32_t port);
+Ftp *Set_path(Ftp *this, const uint8_t *path);

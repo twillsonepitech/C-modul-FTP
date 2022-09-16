@@ -10,23 +10,23 @@
  */
 #include "object.h"
 
-uint32_t get_port(Ftp *this)
+uint32_t Get_port(Ftp *this)
 {
     return this->port;
 }
 
-const uint8_t *get_path(Ftp *this)
+const uint8_t *Get_path(Ftp *this)
 {
     return this->path;
 }
 
-Ftp *set_port(Ftp *this, const uint32_t port)
+Ftp *Set_port(Ftp *this, const uint32_t port)
 {
     this->port = port;
     return this;
 }
 
-Ftp *set_path(Ftp *this, const uint8_t *path)
+Ftp *Set_path(Ftp *this, const uint8_t *path)
 {
     this->path = path;
     return this;

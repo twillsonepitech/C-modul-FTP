@@ -1,3 +1,6 @@
 [submodule "Get-Next-Line"]
 	path = Get-Next-Line
 	url = git@github.com:twillsonepitech/Get-Next-Line.git
+[submodule "Lib-IO"]
+	path = Lib-IO
+	url = git@github.com:twillsonepitech/Lib-IO.git

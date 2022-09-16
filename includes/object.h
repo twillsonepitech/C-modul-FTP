@@ -11,9 +11,12 @@
 #pragma once
 
 #include <sys/types.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
 #include <stdint.h>
 #include <stdarg.h>
 #include "raise.h"
+#include "struct.h"
 
 typedef void Object;
 typedef void (*ctor_t)(Object *this, va_list *va_list_args);
@@ -28,16 +31,17 @@ typedef struct {
     const char *__name__;
     ctor_t __ctor__;
     dtor_t __dtor__;
-    get_port_t __gport__;
-    get_path_t __gpath__;
-    set_port_t __sport__;
-    set_path_t __spath__;
+    get_port_t __gprt__;
+    get_path_t __gpth__;
+    set_port_t __sprt__;
+    set_path_t __spth__;
 } Class;
 
 typedef struct {
     Class __base__;
     uint32_t port;
     const uint8_t *path;
+    struct server_ftp_s server_ftp;
 } Ftp;
 
 extern const Class *_Ftp;
