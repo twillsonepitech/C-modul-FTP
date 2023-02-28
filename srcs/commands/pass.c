@@ -17,19 +17,16 @@ uint8_t pass(const uint64_t dbl_lineptr_length, __attribute__((unused)) const ui
 {
     int32_t return_from_function;
 
-    if (dbl_lineptr_length >= THREE)
-    {
+    if (dbl_lineptr_length >= THREE) {
         WRITE_CODE(client->socket.fd, FTP_CODE_500, NULL);
         return EXIT_FAILURE_FTP;
     }
-    if (client->name == NULL)
-    {
+    if (client->name == NULL) {
         WRITE_CODE(client->socket.fd, FTP_CODE_503, NULL);
         return EXIT_FAILURE_FTP;
     }
     return_from_function = strcmp((const char *)client->name, "Anonymous");
-    if (EXIT_SUCCESS != return_from_function)
-    {
+    if (EXIT_SUCCESS != return_from_function) {
         WRITE_CODE(client->socket.fd, FTP_CODE_530_2, NULL);
         return EXIT_FAILURE_FTP;
     }

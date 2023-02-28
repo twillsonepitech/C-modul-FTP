@@ -30,8 +30,7 @@ uint8_t helper(const enum return_code_e return_code)
     int32_t index_per_iteration;
 
     index_per_iteration = INIT_INTEGER;
-    while (help_message[index_per_iteration] != NULL)
-    {
+    while (help_message[index_per_iteration] != NULL) {
         fprintf(return_code == SUCCESS ? stdout : stderr, "%s\n", help_message[index_per_iteration]);
         index_per_iteration++;
     }
@@ -45,25 +44,21 @@ uint8_t error_handling(int32_t argc, char const *argv[])
     struct stat sb;
     int32_t index_per_iteration;
 
-    if (NUMBER_OF_ARGUMENTS != argc)
-    {
+    if (NUMBER_OF_ARGUMENTS != argc) {
         LOG_ERROR("Bad number of arguments.");
         return EXIT_FAILURE;
     }
     port = (const uint8_t *) argv[PORT_INDEX];
     path = (const uint8_t *) argv[PATH_INDEX];
     index_per_iteration = INIT_INTEGER;
-    while (port[index_per_iteration] != '\0')
-    {
-        if (false == isdigit(port[index_per_iteration]))
-        {
+    while (port[index_per_iteration] != '\0') {
+        if (false == isdigit(port[index_per_iteration])) {
             LOG_ERROR("Port contains other than digits.");
             return EXIT_FAILURE;
         }
         index_per_iteration++;
     }
-    if (FUNCTION_RETURN_ERROR == stat((const char *) path, &sb) || false == S_ISDIR(sb.st_mode))
-    {
+    if (FUNCTION_RETURN_ERROR == stat((const char *) path, &sb) || false == S_ISDIR(sb.st_mode)) {
         LOG_ERROR("Path doesn't exist or is not a directory.");
         return EXIT_FAILURE;
     }
@@ -78,20 +73,17 @@ int32_t main(int32_t argc, char const *argv[])
     const uint8_t *path;
 
     return_from_function = strcmp(argv[HELP_INDEX], "--help");
-    if (NUMBER_OF_ARGUMENTS_HELP == argc && EXIT_SUCCESS == return_from_function)
-    {
+    if (NUMBER_OF_ARGUMENTS_HELP == argc && EXIT_SUCCESS == return_from_function) {
         return helper(SUCCESS);
     }
     return_from_function = error_handling(argc, argv);
-    if (EXIT_FAILURE == return_from_function)
-    {
+    if (EXIT_FAILURE == return_from_function) {
         return helper(FAILURE);
     }
     port = (uint32_t) atoi(argv[PORT_INDEX]);
     path = (const uint8_t *) argv[PATH_INDEX];
     return_from_function = activate_ftp_server(port, path);
-    if (EXIT_FAILURE == return_from_function)
-    {
+    if (EXIT_FAILURE == return_from_function) {
         return EXIT_FAILURE_EPI;
     }
     return EXIT_SUCCESS;

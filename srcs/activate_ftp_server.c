@@ -21,18 +21,15 @@ uint8_t *xgetcwd(const uint8_t *path)
     uint8_t *cwd;
 
     cwd = (uint8_t *)calloc(PATH_MAX, sizeof(uint8_t));
-    if (NULL == cwd)
-    {
+    if (NULL == cwd) {
         LOG_ERROR("calloc() function: FAILURE.");
         return NULL;
     }
-    if (FUNCTION_RETURN_ERROR == chdir((const char *)path))
-    {
+    if (FUNCTION_RETURN_ERROR == chdir((const char *)path)) {
         LOG_ERROR("chdir() function: FAILURE.");
         return NULL;
     }
-    if (NULL == getcwd((char *)cwd, PATH_MAX))
-    {
+    if (NULL == getcwd((char *)cwd, PATH_MAX)) {
         LOG_ERROR("getcwd() function: FAILURE.");
         return NULL;
     }
@@ -47,28 +44,23 @@ uint8_t activate_ftp_server(const uint32_t port, const uint8_t *path)
     struct server_ftp_s server_ftp;
 
     new_path = xgetcwd(path);
-    if (NULL == new_path)
-    {
+    if (NULL == new_path) {
         LOG_ERROR("Change working directory: FAILURE.");
         return EXIT_FAILURE;
     }
-    else
-    {
+    else {
         LOG_WARN("Change working directory: SUCCESS.");
     }
     ftp = new(_Ftp, port, new_path, INIT_STRUCT);
-    if (NULL == ftp)
-    {
+    if (NULL == ftp) {
         return EXIT_FAILURE;
     }
     return_from_function = init_server_ftp_struct(&server_ftp, ((Class *)ftp)->__gprt__(ftp));
-    if (EXIT_FAILURE == return_from_function)
-    {
+    if (EXIT_FAILURE == return_from_function) {
         return EXIT_FAILURE;
     }
     return_from_function = handle_server_ftp(&server_ftp, ((Class *)ftp)->__gpth__(ftp));
-    if (EXIT_FAILURE == return_from_function)
-    {
+    if (EXIT_FAILURE == return_from_function) {
         return EXIT_FAILURE;
     }
     free(new_path);
@@ -76,8 +68,7 @@ uint8_t activate_ftp_server(const uint32_t port, const uint8_t *path)
     return EXIT_SUCCESS;
 }
 
-static const Ftp _description = {
-    {
+static const Ftp _description = { {
         .__size__ = sizeof(Ftp),
         .__name__ = "c-modular-ftp-server",
         .__ctor__ = (ctor_t)&Ctor,

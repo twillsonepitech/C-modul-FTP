@@ -17,15 +17,13 @@ uint8_t cdup(const uint64_t dbl_lineptr_length, __attribute__((unused)) const ui
 {
     uint8_t *new_path;
 
-    if (ONE != dbl_lineptr_length)
-    {
+    if (ONE != dbl_lineptr_length) {
         WRITE_CODE(client->socket.fd, FTP_CODE_500, NULL);
         return EXIT_FAILURE_FTP;
     }
     free(client->path);
     new_path = xgetcwd((const uint8_t *)"..");
-    if (NULL == new_path)
-    {
+    if (NULL == new_path) {
         return EXIT_FAILURE;
     }
     client->path = (uint8_t *)strdup((const char *)new_path);

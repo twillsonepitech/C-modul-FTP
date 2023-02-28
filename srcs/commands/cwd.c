@@ -20,15 +20,13 @@ uint8_t cwd(const uint64_t dbl_lineptr_length, const uint8_t *lineptr, struct cl
 {
     uint8_t *new_path;
 
-    if (TWO != dbl_lineptr_length)
-    {
+    if (TWO != dbl_lineptr_length) {
         WRITE_CODE(client->socket.fd, FTP_CODE_550, lineptr, NO_SUCH_FILE);
         return EXIT_FAILURE_FTP;
     }
     free(client->path);
     new_path = xgetcwd(lineptr);
-    if (NULL == new_path)
-    {
+    if (NULL == new_path) {
         WRITE_CODE(client->socket.fd, FTP_CODE_550, lineptr, NO_SUCH_FILE);
         return EXIT_FAILURE_FTP;
     }

@@ -15,13 +15,11 @@
 
 uint8_t user(const uint64_t dbl_lineptr_length, const uint8_t *lineptr, struct clients_s *client)
 {
-    if (TWO != dbl_lineptr_length)
-    {
+    if (TWO != dbl_lineptr_length) {
         WRITE_CODE(client->socket.fd, FTP_CODE_500, NULL);
         return EXIT_FAILURE_FTP;
     }
-    if (client->name != NULL)
-    {
+    if (client->name != NULL) {
         free(client->name);
     }
     client->name = (uint8_t *)strdup((const char *)lineptr);

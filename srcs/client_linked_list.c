@@ -18,8 +18,7 @@ struct clients_s *create_client_node(struct socket_s socket, const uint8_t *path
     struct clients_s *node;
 
     node = (struct clients_s *)malloc(sizeof(struct clients_s));
-    if (NULL == node)
-    {
+    if (NULL == node) {
         LOG_ERROR("malloc(): Failed to create client node.");
         return NULL;
     }
@@ -39,25 +38,20 @@ uint8_t add_incoming_client_in_linked_list(struct clients_s **clients, struct so
     struct clients_s *f_client;
     struct clients_s *t_client;
 
-    if (NULL == *clients)
-    {
+    if (NULL == *clients) {
         f_client = create_client_node(socket, path);
-        if (NULL == f_client)
-        {
+        if (NULL == f_client) {
             return EXIT_FAILURE;
         }
         *clients = f_client;
     }
-    else
-    {
+    else {
         f_client = *clients;
-        while (f_client->next != NULL)
-        {
+        while (f_client->next != NULL) {
             f_client = f_client->next;
         }
         t_client = create_client_node(socket, path);
-        if (NULL == t_client)
-        {
+        if (NULL == t_client) {
             return EXIT_FAILURE;
         }
         f_client->next = t_client;
@@ -69,12 +63,10 @@ void free_clients_linked_list(struct clients_s **clients)
 {
     struct clients_s *client;
 
-    while (*clients != NULL)
-    {
+    while (*clients != NULL) {
         client = *clients;
         *clients = (*clients)->next;
-        if (client->name != NULL)
-        {
+        if (client->name != NULL) {
             free(client->name);
         }
         free(client->path);
@@ -86,17 +78,14 @@ void free_clients_linked_list_by_key(struct clients_s **clients, const int32_t f
 {
     struct clients_s *client;
 
-    if (NULL == *clients)
-    {
+    if (NULL == *clients) {
         return;
     }
     client = INIT_POINTER;
-    if ((*clients)->socket.fd == fd_key)
-    {
+    if ((*clients)->socket.fd == fd_key) {
         client = *clients;
         *clients = (*clients)->next;
-        if (client->name != NULL)
-        {
+        if (client->name != NULL) {
             free(client->name);
         }
         free(client->path);

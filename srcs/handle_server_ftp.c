@@ -29,13 +29,11 @@ uint8_t handle_incoming_client(fd_set *rfds, struct clients_s **clients, struct 
 
     FD_SET(socket.fd, rfds);
     return_from_function = add_incoming_client_in_linked_list(clients, socket, path);
-    if (EXIT_FAILURE == return_from_function)
-    {
+    if (EXIT_FAILURE == return_from_function) {
         LOG_ERROR("Client: unsuccessfully added to list.");
         return EXIT_FAILURE;
     }
-    else
-    {
+    else {
         LOG_INFO("Client: successfully added to list.");
     }
     return EXIT_SUCCESS;
@@ -46,8 +44,7 @@ uint8_t client_quitting_server(struct clients_s **clients, struct clients_s *cli
     int32_t return_from_function;
 
     return_from_function = close(client->socket.fd);
-    if (EXIT_FAILURE == return_from_function)
-    {
+    if (EXIT_FAILURE == return_from_function) {
         LOG_ERROR("close() function: FAILURE.");
         return EXIT_FAILURE;
     }
@@ -62,20 +59,15 @@ uint8_t handle_message_client(struct clients_s **clients, const int32_t fd, fd_s
     struct clients_s *client;
 
     client = *clients;
-    while (client != NULL)
-    {
-        if (true == RESPONDING_CLIENT(client->socket.fd, fd))
-        {
+    while (client != NULL) {
+        if (true == RESPONDING_CLIENT(client->socket.fd, fd)) {
             return_from_function = manage_responding_client(client);
-            if (EXIT_FAILURE == return_from_function)
-            {
+            if (EXIT_FAILURE == return_from_function) {
                 return EXIT_FAILURE;
             }
-            if (client->quitted == true)
-            {
+            if (client->quitted == true) {
                 return_from_function = client_quitting_server(clients, client, rfds);
-                if (EXIT_FAILURE == return_from_function)
-                {
+                if (EXIT_FAILURE == return_from_function) {
                     return EXIT_FAILURE;
                 }
             }
@@ -93,33 +85,26 @@ uint8_t manage_clients(struct server_ftp_s *server_ftp, struct clients_s **clien
         .address_length = sizeof(socket.address),
     };
 
-    if (true == RESPONDING_CLIENT(server_ftp->socket.fd, fd))
-    {
+    if (true == RESPONDING_CLIENT(server_ftp->socket.fd, fd)) {
         socket.fd = accept(fd, (struct sockaddr *)&socket.address, &socket.address_length);
-        if (FUNCTION_RETURN_ERROR == socket.fd)
-        {
+        if (FUNCTION_RETURN_ERROR == socket.fd) {
             LOG_ERROR("accept() function: FAILURE.");
             return EXIT_FAILURE;
         }
-        else
-        {
+        else {
             LOG_WARN("accept() function: SUCCESS.");
         }
         return_from_function = handle_incoming_client(&server_ftp->rfds[0], clients, socket, path);
-        if (EXIT_FAILURE == return_from_function)
-        {
+        if (EXIT_FAILURE == return_from_function) {
             return EXIT_FAILURE;
         }
-        else
-        {
+        else {
             WRITE_CODE(socket.fd, FTP_CODE_220, NULL);
         }
     }
-    else
-    {
+    else {
         return_from_function = handle_message_client(clients, fd, &server_ftp->rfds[0]);
-        if (EXIT_FAILURE == return_from_function)
-        {
+        if (EXIT_FAILURE == return_from_function) {
             return EXIT_FAILURE;
         }
     }
@@ -132,18 +117,14 @@ uint8_t handle_clients(struct server_ftp_s *server_ftp, struct clients_s **clien
     int32_t fd;
 
     fd = INIT_INTEGER;
-    while (fd < FD_SETSIZE)
-    {
-        if (true == FD_ISSET(fd, &server_ftp->rfds[1]))
-        {
+    while (fd < FD_SETSIZE) {
+        if (true == FD_ISSET(fd, &server_ftp->rfds[1])) {
             return_from_function = manage_clients(server_ftp, clients, fd, path);
-            if (EXIT_FAILURE == return_from_function)
-            {
+            if (EXIT_FAILURE == return_from_function) {
                 LOG_ERROR("Managing client: FAILURE.");
                 return EXIT_FAILURE;
             }
-            else
-            {
+            else {
                 LOG_WARN("Managing client: SUCCESS.");
             }
         }
@@ -156,13 +137,11 @@ uint8_t setup_signal_and_server_socket(const int32_t server_fd, fd_set *rfds)
 {
     FD_ZERO(rfds);
     FD_SET(server_fd, rfds);
-    if (SIG_ERR == signal(SIGINT, sig_handler))
-    {
+    if (SIG_ERR == signal(SIGINT, sig_handler)) {
         LOG_ERROR("Setup CTRL-C handler: FAILURE.");
         return EXIT_FAILURE;
     }
-    else
-    {
+    else {
         LOG_WARN("Setup CTRL-C handler: SUCCESS.");
     }
     return EXIT_SUCCESS;
@@ -173,30 +152,24 @@ uint8_t handle_server_ftp(struct server_ftp_s *server_ftp, const uint8_t *path)
     int32_t return_from_function;
 
     return_from_function = setup_signal_and_server_socket(server_ftp->socket.fd, &server_ftp->rfds[0]);
-    if (EXIT_FAILURE == return_from_function)
-    {
+    if (EXIT_FAILURE == return_from_function) {
         return EXIT_FAILURE;
     }
-    while (RUNNING)
-    {
+    while (RUNNING) {
         server_ftp->rfds[1] = server_ftp->rfds[0];
         return_from_function = select(FD_SETSIZE, &server_ftp->rfds[1], NULL, NULL, NULL);
-        if (false == RUNNING)
-        {
+        if (false == RUNNING) {
             break;
         }
-        if (FUNCTION_RETURN_ERROR == return_from_function)
-        {
+        if (FUNCTION_RETURN_ERROR == return_from_function) {
             LOG_ERROR("select() function: FAILURE.");
             return EXIT_FAILURE;
         }
-        else
-        {
+        else {
             LOG_INFO("select() function: SUCCESS.");
         }
         return_from_function = handle_clients(server_ftp, &server_ftp->clients, path);
-        if (EXIT_FAILURE == return_from_function)
-        {
+        if (EXIT_FAILURE == return_from_function) {
             return EXIT_FAILURE;
         }
     }
